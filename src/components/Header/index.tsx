@@ -1,4 +1,5 @@
 import { ShoppingCart, MapPin } from 'phosphor-react'
+import { NavLink } from 'react-router-dom'
 
 import Logo from '../../assets/Logo.svg'
 import { HeaderContainer, HeaderContent, HeaderNavbar } from './styles'
@@ -13,9 +14,9 @@ export function Header() {
           <MapPin weight="fill" size={22} /> Porto Alegre, RS
         </span>
         <HeaderNavbar>
-          <a href="">
+          <NavLink to="/coffeePayment">
             <ShoppingCart weight="fill" size={22} />
-          </a>
+          </NavLink>
         </HeaderNavbar>
       </HeaderContent>
     </HeaderContainer>
