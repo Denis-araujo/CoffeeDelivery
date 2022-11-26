@@ -16,6 +16,7 @@ export const TitleCoffe = styled.span`
 
 export const CoffeeList = styled.div`
   display: flex;
+  flex-wrap: wrap;
   margin-top: 3.3rem;
   margin-bottom: 5rem;
   gap: 2rem;
@@ -36,8 +37,14 @@ export const Coffee = styled.div`
   }
 `
 
+export const CoffeeTypeList = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`
+
 export const CoffeeType = styled.span`
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   font-weight: 700;
@@ -109,6 +116,10 @@ export const QuantityCoffee = styled.div`
       color: ${(props) => props.theme.purpleDark};
 
       font-size: 1.5rem;
+
+      :hover {
+        cursor: pointer;
+      }
     }
   }
 
@@ -119,5 +130,9 @@ export const QuantityCoffee = styled.div`
     height: 2.5rem;
     width: 2rem;
     color: ${(props) => props.theme.white};
+
+    :hover {
+      cursor: pointer;
+    }
   }
 `
