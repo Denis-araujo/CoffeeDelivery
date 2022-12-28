@@ -42,9 +42,21 @@ export const HeaderNavbar = styled.nav`
     color: ${(props) => props.theme.purpleDark};
     border-radius: 6px;
     height: 2.5rem;
+    text-decoration: none;
+
+    span {
+      position: relative;
+      top: -18px;
+      left: 18px;
+      border-radius: 9999px;
+      height: 20px;
+      width: 20px;
+    }
   }
 
   svg {
     color: ${(props) => props.theme.yellowDark};
+    position: relative;
+    top: -17px;
   }
 `

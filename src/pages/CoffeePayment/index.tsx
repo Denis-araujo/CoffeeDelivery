@@ -11,6 +11,26 @@ import * as S from './styles'
 import { CoffeeContext } from '../../context/CoffeeContext'
 import { useContext } from 'react'
 
+import * as zod from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { priceFormatter } from '../../utils/formatter'
+import { useNavigate } from 'react-router-dom'
+import { DeliveryAddressContext } from '../../context/DeliveryAddressContext'
+
+const addressValidationSchema = zod.object({
+  cep: zod.number().min(8, 'Informe um cep(minimo 8)'),
+  street: zod.string().min(1, 'Informe uma Rua'),
+  numberStreet: zod.number(),
+  complement: zod.string().optional(),
+  district: zod.string().min(1, 'Informe o Bairro'),
+  city: zod.string().min(1, 'Informe a cidade'),
+  UF: zod.string().min(1, 'Informe o UF'),
+  payment: zod.string(),
+})
+
+type DeliveryAddressData = zod.infer<typeof addressValidationSchema>
+
 export function CoffeePayment() {
   const {
     products,
@@ -19,6 +39,32 @@ export function CoffeePayment() {
     reduceTheQuantityOfTheProduct,
     removeProduct,
   } = useContext(CoffeeContext)
+
+  const { addDeliveryAddress } = useContext(DeliveryAddressContext)
+
+  const navigate = useNavigate()
+
+  const deliveryAddress = useForm<DeliveryAddressData>({
+    resolver: zodResolver(addressValidationSchema),
+    defaultValues: {
+      cep: Number('CEP'),
+      city: '',
+      complement: '',
+      district: '',
+      numberStreet: Number('Número'),
+      street: '',
+      UF: '',
+      payment: '',
+    },
+  })
+
+  const { register, handleSubmit, setValue, watch } = deliveryAddress
+
+  function handleSubmitAndress(data: DeliveryAddressData) {
+    addDeliveryAddress(data)
+
+    navigate('/RequestMadeSuccessfully')
+  }
 
   function handleIncreaseTheQuantityOfTheProduct(id: number) {
     increaseTheQuantityOfTheProduct(id)
@@ -33,23 +79,14 @@ export function CoffeePayment() {
   }
 
   const deliveryPrice = 3.3
-  const deliveryPriceFormat = deliveryPrice.toLocaleString('pt-br', {
-    style: 'currency',
-    currency: 'BRL',
-  })
-  const totalPriceOfCoffees = coffeePrices.total.toLocaleString('pt-br', {
-    style: 'currency',
-    currency: 'BRL',
-  })
+  const totalPriceOfCoffees = coffeePrices.total
+  const total = coffeePrices.total + deliveryPrice
 
-  const total = (coffeePrices.total + deliveryPrice).toLocaleString('pt-br', {
-    style: 'currency',
-    currency: 'BRL',
-  })
+  const payment = watch('payment')
 
   return (
     <main>
-      <S.FormPayment action="">
+      <S.FormPayment onSubmit={handleSubmit(handleSubmitAndress)} action="">
         <S.CardRequest>
           <span>Complete seu pedido</span>
           <div>
@@ -65,18 +102,29 @@ export function CoffeePayment() {
               </div>
 
               <S.ListInputAddress>
-                <S.InputAddress width="12.5rem" type="text" placeholder="CEP" />
-                <S.InputAddress type="text" placeholder="Rua" />
+                <S.InputAddress
+                  width="12.5rem"
+                  type="number"
+                  placeholder="CEP"
+                  {...register('cep', { valueAsNumber: true })}
+                />
+                <S.InputAddress
+                  type="text"
+                  placeholder="Rua"
+                  {...register('street')}
+                />
                 <div>
                   <S.InputAddress
                     width="12.5rem"
-                    type="text"
+                    type="number"
                     placeholder="Número"
+                    {...register('numberStreet', { valueAsNumber: true })}
                   />
                   <S.InputAddress
                     width="63.3%"
                     type="text"
                     placeholder="Complemento"
+                    {...register('complement')}
                   />
                 </div>
                 <div>
@@ -84,13 +132,20 @@ export function CoffeePayment() {
                     width="12.5rem"
                     type="text"
                     placeholder="Bairro"
+                    {...register('district')}
                   />
                   <S.InputAddress
                     width="17.25rem"
                     type="text"
                     placeholder="Cidade"
+                    {...register('city')}
                   />
-                  <S.InputAddress width="13%" type="text" placeholder="UF" />
+                  <S.InputAddress
+                    width="13%"
+                    type="text"
+                    placeholder="UF"
+                    {...register('UF')}
+                  />
                 </div>
               </S.ListInputAddress>
             </S.AddressData>
@@ -107,18 +162,30 @@ export function CoffeePayment() {
               </div>
 
               <S.ListPayment>
-                <S.PaymentMethodButton>
+                <S.PaymentMethod
+                  type="button"
+                  active={payment === 'Cartao de crédito'}
+                  onClick={() => setValue('payment', 'Cartao de crédito')}
+                >
                   <CreditCard />
                   Cartao de crédito
-                </S.PaymentMethodButton>
-                <S.PaymentMethodButton>
+                </S.PaymentMethod>
+                <S.PaymentMethod
+                  active={payment === 'Cartão de débito'}
+                  type="button"
+                  onClick={() => setValue('payment', 'Cartão de débito')}
+                >
                   <Storefront />
                   Cartão de débito
-                </S.PaymentMethodButton>
-                <S.PaymentMethodButton>
+                </S.PaymentMethod>
+                <S.PaymentMethod
+                  active={payment === 'dinheiro'}
+                  type="button"
+                  onClick={() => setValue('payment', 'dinheiro')}
+                >
                   <Money />
                   Dinheiro
-                </S.PaymentMethodButton>
+                </S.PaymentMethod>
               </S.ListPayment>
             </S.CardPayment>
           </div>
@@ -130,11 +197,7 @@ export function CoffeePayment() {
           <S.CardProductsAndBuy>
             <S.CardProducts>
               {products.map((product) => {
-                const coffeeSubtotal = (
-                  product.price * product.quantityCurrent
-                ).toLocaleString('pt-br', {
-                  minimumFractionDigits: 2,
-                })
+                const coffeeSubtotal = product.price * product.quantityCurrent
 
                 return (
                   <S.CardProduct key={product.id}>
@@ -166,6 +229,7 @@ export function CoffeePayment() {
                             </button>
                           </S.QuantityCoffee>
                           <S.ButtonRemoverCoffee
+                            type="button"
                             onClick={() => handleRemoveProduct(product.id)}
                           >
                             <Trash />
@@ -174,7 +238,9 @@ export function CoffeePayment() {
                         </S.QuantityCoffeeAndRemove>
                       </div>
                     </S.InformationCard>
-                    <S.PriceCoffee>R$ {coffeeSubtotal}</S.PriceCoffee>
+                    <S.PriceCoffee>
+                      {priceFormatter.format(coffeeSubtotal)}
+                    </S.PriceCoffee>
                   </S.CardProduct>
                 )
               })}
@@ -183,17 +249,20 @@ export function CoffeePayment() {
             <S.CardPrices>
               <S.Prices>
                 <span>
-                  Total de itens <span>{totalPriceOfCoffees}</span>
+                  Total de itens{' '}
+                  <span>{priceFormatter.format(totalPriceOfCoffees)}</span>
                 </span>
                 <span>
-                  Entrega <span>{deliveryPriceFormat}</span>
+                  Entrega <span>{priceFormatter.format(deliveryPrice)}</span>
                 </span>
                 <S.PriceTotal>
-                  Total <span>{total}</span>
+                  Total <span>{priceFormatter.format(total)}</span>
                 </S.PriceTotal>
               </S.Prices>
 
-              <S.ButtonConfirmRequest>confirmar pedido</S.ButtonConfirmRequest>
+              <S.ButtonConfirmRequest type="submit">
+                confirmar pedido
+              </S.ButtonConfirmRequest>
             </S.CardPrices>
           </S.CardProductsAndBuy>
         </div>

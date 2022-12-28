@@ -2,6 +2,8 @@ import styled from 'styled-components'
 
 export const FormPayment = styled.form`
   display: flex;
+  /*   width: 100vw;
+  height: 100vh; */
 `
 
 export const CardRequest = styled.div`
@@ -63,6 +65,7 @@ export const ListInputAddress = styled.div`
 
 export const InputAddress = styled.input`
   background-color: ${(props) => props.theme.baseInput};
+  /* opacity: 50%; */
 
   border: 1px solid ${(props) => props.theme.baseButton};
   border-radius: 4px;
@@ -96,14 +99,20 @@ export const ListPayment = styled.div`
   display: flex;
 `
 
-export const PaymentMethodButton = styled.button`
+interface PaymentMethodProps {
+  active: boolean
+}
+
+export const PaymentMethod = styled.button<PaymentMethodProps>`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: ${(props) => props.theme.baseInput};
+  background-color: ${(props) =>
+    props.active ? props.theme.purpleLight : props.theme.baseInput};
 
-  border: 1px solid ${(props) => props.theme.baseButton};
+  border: 1px solid
+    ${(props) => (props.active ? props.theme.purple : props.theme.baseButton)};
   border-radius: 4px;
 
   width: 11rem;

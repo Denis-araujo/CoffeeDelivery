@@ -51,27 +51,25 @@ export const CoffeeContextProvider = ({
     },
   )
 
-  console.log('coffeePrice', coffeePrices)
-  console.log('procuts', products)
-
   function addProduct(id: number) {
     const productCurrent = coffees.find((coffee) => coffee.id === id)
-    if (productCurrent) {
-      if (products.includes(productCurrent)) {
-        console.log('ola')
-      } else {
-        setProducts([...products, productCurrent])
-      }
+
+    const productDoesNotExistInTheList =
+      productCurrent && !products.includes(productCurrent)
+
+    if (productDoesNotExistInTheList) {
+      setProducts([...products, productCurrent])
     }
   }
 
   function increaseTheQuantityOfTheProduct(id: number) {
     const productCurrent = coffees.find((coffee) => coffee.id === id)
 
-    if (
+    const currentQuantityLessThanStock =
       productCurrent &&
       productCurrent.quantityCurrent < productCurrent.quantityInventory
-    ) {
+
+    if (currentQuantityLessThanStock) {
       setCoffees(
         coffees.map((item) => {
           if (item.id === productCurrent.id) {
@@ -89,7 +87,10 @@ export const CoffeeContextProvider = ({
   function reduceTheQuantityOfTheProduct(id: number) {
     const productCurrent = coffees.find((coffee) => coffee.id === id)
 
-    if (productCurrent && productCurrent.quantityCurrent !== 1) {
+    const currentQuantityCannotBeLessThanOne =
+      productCurrent && productCurrent.quantityCurrent !== 1
+
+    if (currentQuantityCannotBeLessThanOne) {
       setCoffees(
         coffees.map((item) => {
           if (item.id === productCurrent.id) {
@@ -107,7 +108,9 @@ export const CoffeeContextProvider = ({
   function removeProduct(id: number) {
     const filteredProducts = products.filter((product) => product.id !== id)
 
-    setProducts(filteredProducts)
+    if (products.length > 1) {
+      setProducts(filteredProducts)
+    }
   }
 
   return (
