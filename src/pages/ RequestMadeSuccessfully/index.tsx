@@ -2,16 +2,19 @@ import { CurrencyDollar, MapPin, Timer } from 'phosphor-react'
 import { useContext } from 'react'
 import { DeliveryAddressContext } from '../../context/DeliveryAddressContext'
 
+import deliveryman from '../../assets/deliveryman.svg'
 import * as S from './styles'
 
 export function RequestMadeSuccessfully() {
   const { deliveryAddress } = useContext(DeliveryAddressContext)
 
   return (
-    <div>
+    <S.RequestMadeSuccessfullyContent>
       <div>
-        <h1>Uhu! Pedido confirmado</h1>
-        <span>Agora é só aguardar que logo o café chegará até você</span>
+        <S.Title>Uhu! Pedido confirmado</S.Title>
+        <S.SubTitle>
+          Agora é só aguardar que logo o café chegará até você
+        </S.SubTitle>
 
         <S.AddressCard>
           <S.QualityCard backgroundIconColor="purple">
@@ -46,7 +49,7 @@ export function RequestMadeSuccessfully() {
         </S.AddressCard>
       </div>
 
-      <img src="" alt="" />
-    </div>
+      <img src={deliveryman} alt="" />
+    </S.RequestMadeSuccessfullyContent>
   )
 }

@@ -1,6 +1,26 @@
 import styled from 'styled-components'
 
-export const RequestMadeSuccessfullyContent = styled.div``
+export const RequestMadeSuccessfullyContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 5rem;
+`
+
+export const Title = styled.span`
+  display: block;
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 130%;
+  color: ${(props) => props.theme.yellowDark};
+`
+
+export const SubTitle = styled.span`
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 130%;
+  color: ${(props) => props.theme.baseSubtitle};
+`
 
 export const AddressCard = styled.div`
   width: 526px;
@@ -14,8 +34,6 @@ export const AddressCard = styled.div`
   padding: 2.5rem;
   margin-top: 2.5rem;
   justify-content: center;
-  /* text-align: center; */
-  /* padding: 20px; */
   box-sizing: border-box;
 
   ::before {
