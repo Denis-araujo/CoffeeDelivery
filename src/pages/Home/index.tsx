@@ -29,7 +29,7 @@ export function Home() {
     <main>
       <HomeHeader />
       <S.HomeBody>
-        <S.TitleCoffe>Nossos cafés</S.TitleCoffe>
+        <S.TitleCoffee>Nossos cafés</S.TitleCoffee>
 
         <S.CoffeeList>
           {coffees.map((coffee) => {

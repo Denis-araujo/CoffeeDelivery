@@ -9,7 +9,11 @@ import { Controller, useFormContext } from 'react-hook-form'
 import * as S from './styles'
 
 export function DeliveryAndPaymentCard() {
-  const { register, control } = useFormContext()
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext()
 
   return (
     <S.CardRequest>
@@ -27,50 +31,94 @@ export function DeliveryAndPaymentCard() {
           </div>
 
           <S.ListInputAddress>
-            <S.InputAddress
-              width="12.5rem"
-              type="number"
-              placeholder="CEP"
-              {...register('cep', { valueAsNumber: true })}
-            />
-            <S.InputAddress
-              type="text"
-              placeholder="Rua"
-              {...register('street')}
-            />
-            <div>
-              <S.InputAddress
+            <S.InputContainer>
+              <S.Input
                 width="12.5rem"
                 type="number"
-                placeholder="Número"
-                {...register('numberStreet', { valueAsNumber: true })}
+                placeholder="CEP"
+                {...register('cep', { valueAsNumber: true })}
               />
-              <S.InputAddress
-                width="63.3%"
-                type="text"
-                placeholder="Complemento"
-                {...register('complement')}
-              />
+
+              {errors.cep && <S.ErrorMessage>Informe um CEP!</S.ErrorMessage>}
+            </S.InputContainer>
+            <S.InputContainer>
+              <S.Input type="text" placeholder="Rua" {...register('street')} />
+
+              {errors.street && (
+                <S.ErrorMessage>
+                  {String(errors.street?.message)}
+                </S.ErrorMessage>
+              )}
+            </S.InputContainer>
+            <div>
+              <S.InputContainer>
+                <S.Input
+                  width="12.5rem"
+                  type="number"
+                  placeholder="Número"
+                  {...register('numberStreet', { valueAsNumber: true })}
+                />
+
+                {errors.numberStreet && (
+                  <S.ErrorMessage>Informe o número da Rua</S.ErrorMessage>
+                )}
+              </S.InputContainer>
+              <S.InputContainer>
+                <S.Input
+                  width="23rem"
+                  type="text"
+                  placeholder="Complemento(opcional)"
+                  {...register('complement')}
+                />
+
+                {errors.complement && (
+                  <S.ErrorMessage>
+                    {String(errors.complement?.message)}
+                  </S.ErrorMessage>
+                )}
+              </S.InputContainer>
             </div>
             <div>
-              <S.InputAddress
-                width="12.5rem"
-                type="text"
-                placeholder="Bairro"
-                {...register('district')}
-              />
-              <S.InputAddress
-                width="17.25rem"
-                type="text"
-                placeholder="Cidade"
-                {...register('city')}
-              />
-              <S.InputAddress
-                width="13%"
-                type="text"
-                placeholder="UF"
-                {...register('UF')}
-              />
+              <S.InputContainer>
+                <S.Input
+                  width="12.5rem"
+                  type="text"
+                  placeholder="Bairro"
+                  {...register('district')}
+                />
+
+                {errors.district && (
+                  <S.ErrorMessage>
+                    {String(errors.district?.message)}
+                  </S.ErrorMessage>
+                )}
+              </S.InputContainer>
+              <S.InputContainer>
+                <S.Input
+                  width="17.25rem"
+                  type="text"
+                  placeholder="Cidade"
+                  {...register('city')}
+                />
+
+                {errors.city && (
+                  <S.ErrorMessage>
+                    {String(errors.city?.message)}
+                  </S.ErrorMessage>
+                )}
+              </S.InputContainer>
+              <S.InputContainer>
+                <S.Input
+                  width="4.8rem"
+                  type="text"
+                  placeholder="UF"
+                  {...register('UF')}
+                />
+
+                {errors.UF && (
+                  <S.ErrorMessage>{String(errors.UF?.message)}</S.ErrorMessage>
+                )}
+              </S.InputContainer>
             </div>
           </S.ListInputAddress>
         </S.AddressData>
@@ -94,18 +142,25 @@ export function DeliveryAndPaymentCard() {
                   onValueChange={field.onChange}
                   value={field.value}
                 >
-                  <S.PaymentMethod type="button" value="creditCard">
-                    <CreditCard />
-                    Cartao de crédito
-                  </S.PaymentMethod>
-                  <S.PaymentMethod type="button" value="debitCard">
-                    <Storefront />
-                    Cartão de débito
-                  </S.PaymentMethod>
-                  <S.PaymentMethod type="button" value="cash">
-                    <Money />
-                    Dinheiro
-                  </S.PaymentMethod>
+                  <div>
+                    <S.PaymentMethod type="button" value="credito">
+                      <CreditCard />
+                      Cartao de crédito
+                    </S.PaymentMethod>
+                    <S.PaymentMethod type="button" value="debito">
+                      <Storefront />
+                      Cartão de débito
+                    </S.PaymentMethod>
+                    <S.PaymentMethod type="button" value="dinheiro">
+                      <Money />
+                      Dinheiro
+                    </S.PaymentMethod>
+                  </div>
+                  {errors.payment && (
+                    <S.ErrorMessage>
+                      {String(errors.payment?.message)}
+                    </S.ErrorMessage>
+                  )}
                 </S.ListPayment>
               )
             }}

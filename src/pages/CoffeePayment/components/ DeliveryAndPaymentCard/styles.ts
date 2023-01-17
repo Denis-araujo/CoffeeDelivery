@@ -12,7 +12,6 @@ export const AddressData = styled.div`
   border-radius: 6px;
 
   width: 41.5rem;
-  height: 23.25rem;
   padding: 2.5rem;
   margin-top: 0.9rem;
   margin-bottom: 0.75rem;
@@ -49,16 +48,21 @@ export const ListInputAddress = styled.div`
   gap: 1rem;
 
   div {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
 
-    input + input {
+    div + div {
       margin-left: 1rem;
     }
   }
 `
 
-export const InputAddress = styled.input`
+export const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const Input = styled.input`
   background-color: ${(props) => props.theme.baseInput};
 
   border: 1px solid ${(props) => props.theme.baseButton};
@@ -67,6 +71,13 @@ export const InputAddress = styled.input`
   width: ${(props) => (props.width ? props.width : 'auto')};
   height: 2.6rem;
 `
+
+export const ErrorMessage = styled.span`
+  color: red;
+  font-size: 0.75rem;
+`
+
+export const InputAddress = styled.input``
 
 export const CardPayment = styled.div`
   display: flex;
@@ -91,6 +102,12 @@ export const CardPayment = styled.div`
 
 export const ListPayment = styled(RadioGroup.Root)`
   display: flex;
+  flex-direction: column;
+
+  div {
+    display: flex;
+    gap: 0.5rem;
+  }
 `
 
 export const PaymentMethod = styled(RadioGroup.Item)`

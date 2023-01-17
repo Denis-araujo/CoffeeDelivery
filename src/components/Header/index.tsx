@@ -9,8 +9,6 @@ import { HeaderContainer, HeaderContent, HeaderNavbar } from './styles'
 export function Header() {
   const { products } = useContext(CoffeeContext)
 
-  // criar variavel para lista de coffee vazias
-
   return (
     <HeaderContainer>
       <NavLink to="/">

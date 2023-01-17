@@ -4,7 +4,7 @@ export const HomeBody = styled.div`
   margin-top: 6rem;
 `
 
-export const TitleCoffe = styled.span`
+export const TitleCoffee = styled.span`
   display: flex;
   flex-direction: column;
   font-size: 2rem;

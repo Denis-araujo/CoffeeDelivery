@@ -6,19 +6,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { DeliveryAddressContext } from '../../context/DeliveryAddressContext'
 import { DeliveryAndPaymentCard } from './components/ DeliveryAndPaymentCard'
-import { CardProcutsAndBuy } from './components/CardProductsAndBuy'
+import { CardProductsAndBuy } from './components/CardProductsAndBuy'
 
 import * as zod from 'zod'
 
 const addressValidationSchema = zod.object({
-  cep: zod.number().min(8, 'Informe um cep(minimo 8)'),
+  cep: zod.number().min(1, 'Informe um cep'),
   street: zod.string().min(1, 'Informe uma Rua'),
-  numberStreet: zod.number(),
+  numberStreet: zod.number().min(1, 'Informe um número'),
   complement: zod.string().optional(),
   district: zod.string().min(1, 'Informe o Bairro'),
   city: zod.string().min(1, 'Informe a cidade'),
   UF: zod.string().min(1, 'Informe o UF'),
-  payment: zod.enum(['creditCard', 'debitCard', 'cash']),
+  payment: zod.enum(['debito', 'credito', 'dinheiro']),
 })
 
 type DeliveryAddressData = zod.infer<typeof addressValidationSchema>
@@ -34,7 +34,7 @@ export function CoffeePayment() {
 
   const { handleSubmit } = deliveryAddress
 
-  function handleSubmitAndress(data: DeliveryAddressData) {
+  function handleSubmitAddress(data: DeliveryAddressData) {
     addDeliveryAddress(data)
 
     navigate('/RequestMadeSuccessfully')
@@ -42,7 +42,7 @@ export function CoffeePayment() {
 
   return (
     <main>
-      <S.FormPayment onSubmit={handleSubmit(handleSubmitAndress)} action="">
+      <S.FormPayment onSubmit={handleSubmit(handleSubmitAddress)} action="">
         <FormProvider {...deliveryAddress}>
           <DeliveryAndPaymentCard />
         </FormProvider>
@@ -50,7 +50,7 @@ export function CoffeePayment() {
         <div>
           <span>Cafés selecionados</span>
 
-          <CardProcutsAndBuy />
+          <CardProductsAndBuy />
         </div>
       </S.FormPayment>
     </main>
